@@ -3,13 +3,13 @@
 using namespace std;
 #include <cstdlib>
 #include <cmath>
-#include <iostream>
+
 #include <vector>
 #include <time.h>
 #include <iomanip>
 #include <math.h>
 #include <fstream>
-
+#include <armadillo>
 using namespace std;
 ofstream ofile;
 
@@ -189,6 +189,45 @@ void problem_b(int n){
     delete [] f_vec;
 
 }
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+void problem_e(int n){
+    arma::mat A = arma::zeros<arma::mat>(n+2,n+2);
+    arma::vec a(n+1);
+    arma::vec b(n+2);
+    arma::vec c(n+1);
+
+    a.fill(-1);
+    b.fill(2);
+    c.fill(-1);
+    arma::vec x(n+2);
+    arma::vec btilde(n+2);
+    double h = 1.0/(n+1);
+    double h2 = h*h;
+    for (int i = 0;i<n+2; i ++){
+        x[i] = i*h;
+        btilde[i] = h2*fx(x[i]);
+    }
+    // lager tridiagonale matrisen A
+
+    for(int i= 0; i<n+2;i++){
+        A[i,i] = b(i);
+       if(i>0){
+           A[i,i-1] = a(i);
+       }
+       if(i<n+2){
+               A[i,i+1] = c(i);
+           }
+    }
+
+
+
+    arma::vec v = arma::solve(A,btilde);
+    arma::mat L;
+    arma::mat U;
+    arma::lu(L,U,A);
+
+}
+
 int main(int argc, char* args[]) {
 
     int n = 10;
